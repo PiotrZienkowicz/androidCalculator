@@ -26,15 +26,22 @@ namespace Kalkulator
         {
             isNegative = (x < 0);
 
-            Int64 intP = Convert.ToInt64(x);
-            isFloat = ((x - intP) > 0);
+            string num = x.ToString();
 
-            intPart = Convert.ToString(intP);
-            if(isFloat)
+            if (isNegative) num = num.Substring(1, num.Length - 2);
+            Int64 intP = Convert.ToInt64(x);
+
+            isFloat = (Math.Abs(x - intP) > 0);
+            
+            if (isFloat)
             {
-                floatPart = Convert.ToString(x - intP);
-                floatPart = floatPart.Substring(2, floatPart.Length - 2);
+                int pointIndex = num.LastIndexOf('.');
+                intPart = num.Substring(0, pointIndex);
+                int offset = intPart.Length + 1;
+                floatPart = num.Substring(offset, num.Length - 1 - offset);
             }
+            else
+                intPart = num;
         }
 
         public double GetNumber

@@ -163,6 +163,7 @@ namespace Kalkulator
 
                 }
             }
+            LastResult = result;
             return result;
         }
 
@@ -171,7 +172,6 @@ namespace Kalkulator
 
         internal void Restart()
         {
-            LastResult = GetResult();
             operationHistory = new List<Operation>();
             IsRestarted = true;
         }

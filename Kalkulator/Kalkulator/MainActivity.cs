@@ -100,17 +100,6 @@ namespace Kalkulator
             {
 
                 DoOperation(OPERATION_TYPE.PERCENT);
-
-                //double result = calc.GetResult();
-                //Number resultNumber = new Number(result);
-                //if (result < 0) resultNumber.ChangeSign();
-
-                ////Number result = 
-                ////calc = new Calculator();
-
-                //calc.AddCalculation(currentResultNumber.GetNumber, Calculator.OPERATION_TYPE.PERCENT);
-
-                //this.Refresh();
             };
 
             #endregion
@@ -211,13 +200,25 @@ namespace Kalkulator
                 }
 
                 calc.AddCalculation(currentResultNumber.GetNumber, type);
-                currentResultNumber = new Number();
-                this.Refresh();
+
+                if (type != OPERATION_TYPE.EQUALS)
+                {
+                    currentResultNumber = new Number();
+                    this.Refresh();
+                }
+                else
+                {
+                    currentResultNumber = new Number(calc.GetResult());
+                    this.Refresh();
+                    this.Restart();
+                }
             }
             else
             {
                 bool canCalculate = true;
-                if ((type == OPERATION_TYPE.EQUALS) && calc.CheckLastOperation(OPERATION_TYPE.DIVISION))
+                //if ((type == OPERATION_TYPE.EQUALS) && calc.CheckLastOperation(OPERATION_TYPE.DIVISION))
+                if ( calc.CheckLastOperation(OPERATION_TYPE.DIVISION))
+
                 {
                     if (currentResultNumber.GetNumber == 0)
                     {
@@ -230,7 +231,7 @@ namespace Kalkulator
                 {
                     calc.AddCalculation(currentResultNumber.GetNumber, type);
                     currentResultNumber = new Number();
-
+                    this.Refresh();
                 }
 
                 if ((type == OPERATION_TYPE.EQUALS) && canCalculate)
