@@ -3,3 +3,4 @@ TODO:
 -przekraczanie limitu liczb(try/catch)
 -pamiec podreczna
 -style
+-testy jednostkowe

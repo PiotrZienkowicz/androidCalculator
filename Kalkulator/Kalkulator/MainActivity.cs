@@ -2,6 +2,7 @@
 using Android.Widget;
 using Android.OS;
 using Android.Views;
+using static Kalkulator.Calculator;
 
 namespace Kalkulator
 {
@@ -19,6 +20,8 @@ namespace Kalkulator
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+            // hide titlebar
             RequestWindowFeature(Android.Views.WindowFeatures.NoTitle);
             SetContentView(Resource.Layout.Main);
 
@@ -47,30 +50,12 @@ namespace Kalkulator
         void PrepareButtonsEvents()
         {
             #region Function buttons
-            // result button
-            Button equalsButton = FindViewById<Button>(Resource.Id.equals);
-            equalsButton.Click += delegate
-            {
-                if (currentResultNumber.GetNumber != 0)
-                {
-                    calc.AddCalculation(currentResultNumber.GetNumber, Calculator.OPERATION_TYPE.EQUALS);
-                    currentResultNumber = new Number(calc.GetResult());
-                    this.Refresh();
-                    this.Restart();
-                }
-                else
-                    this.InvalidOperation("Dividing by 0");
-
-
-            };
-
             // restaring button
             Button clearButton = FindViewById<Button>(Resource.Id.clear);
             clearButton.Click += delegate
             {
                 this.Restart();
                 this.Refresh();
-
             };
 
             // memory buttons
@@ -80,65 +65,52 @@ namespace Kalkulator
             #endregion
             #region Operation buttons
             // Operation buttons
+            Button equalsButton = FindViewById<Button>(Resource.Id.equals);
+            equalsButton.Click += delegate
+            {
+                DoOperation(OPERATION_TYPE.EQUALS);
+            };
+
             Button additionButton = FindViewById<Button>(Resource.Id.addition);
             additionButton.Click += delegate
             {
-                calc.AddCalculation(currentResultNumber.GetNumber, Calculator.OPERATION_TYPE.ADDITION);
-                currentResultNumber = new Number();
-                this.Refresh();
-
+                DoOperation(OPERATION_TYPE.ADDITION);
             };
 
             Button substrictionButton = FindViewById<Button>(Resource.Id.substriction);
             substrictionButton.Click += delegate
             {
-                calc.AddCalculation(currentResultNumber.GetNumber, Calculator.OPERATION_TYPE.SUBSTRACTION);
-                currentResultNumber = new Number();
-                this.Refresh();
-
+                DoOperation(OPERATION_TYPE.SUBSTRACTION);
             };
 
             Button divisionButton = FindViewById<Button>(Resource.Id.division);
             divisionButton.Click += delegate
             {
-                if (currentResultNumber.GetNumber != 0)
-                {
-                    calc.AddCalculation(currentResultNumber.GetNumber, Calculator.OPERATION_TYPE.DIVISION);
-                    currentResultNumber = new Number();
-                    this.Refresh();
-                }
-                else
-                {
-                    this.InvalidOperation("Dividing by 0");
-                }
-
-
-
+                DoOperation(OPERATION_TYPE.DIVISION);
             };
 
             Button multiplicationButton = FindViewById<Button>(Resource.Id.multiplication);
             multiplicationButton.Click += delegate
             {
-                calc.AddCalculation(currentResultNumber.GetNumber, Calculator.OPERATION_TYPE.MULTIPLICATION);
-                currentResultNumber = new Number();
-                this.Refresh();
-
+                DoOperation(OPERATION_TYPE.MULTIPLICATION);
             };
 
             Button percentButton = FindViewById<Button>(Resource.Id.percent);
             percentButton.Click += delegate
             {
-                double result = calc.GetResult();
-                Number resultNumber = new Number(result);
-                if (result < 0) resultNumber.ChangeSign();
 
-                //Number result = 
-                //calc = new Calculator();
+                DoOperation(OPERATION_TYPE.PERCENT);
 
-                calc.AddCalculation(currentResultNumber.GetNumber, Calculator.OPERATION_TYPE.PERCENT);
+                //double result = calc.GetResult();
+                //Number resultNumber = new Number(result);
+                //if (result < 0) resultNumber.ChangeSign();
 
-                this.Refresh();
+                ////Number result = 
+                ////calc = new Calculator();
 
+                //calc.AddCalculation(currentResultNumber.GetNumber, Calculator.OPERATION_TYPE.PERCENT);
+
+                //this.Refresh();
             };
 
             #endregion
@@ -229,6 +201,46 @@ namespace Kalkulator
             #endregion
         }
 
+        void DoOperation(OPERATION_TYPE type)
+        {
+            if(calc.IsEmpty())
+            {
+                if(calc.IsRestarted && currentResultNumber.GetNumber == 0)
+                {
+                    currentResultNumber = new Number(calc.LastResult);
+                }
+
+                calc.AddCalculation(currentResultNumber.GetNumber, type);
+                currentResultNumber = new Number();
+                this.Refresh();
+            }
+            else
+            {
+                bool canCalculate = true;
+                if ((type == OPERATION_TYPE.EQUALS) && calc.CheckLastOperation(OPERATION_TYPE.DIVISION))
+                {
+                    if (currentResultNumber.GetNumber == 0)
+                    {
+                        InvalidOperation("Dividing by 0");
+                        canCalculate = false;
+                    }
+                }
+
+                if (canCalculate)
+                {
+                    calc.AddCalculation(currentResultNumber.GetNumber, type);
+                    currentResultNumber = new Number();
+
+                }
+
+                if ((type == OPERATION_TYPE.EQUALS) && canCalculate)
+                {
+                    currentResultNumber = new Number(calc.GetResult());
+                    this.Refresh();
+                    this.Restart();
+                }
+            }
+        }
 
         void AddDigit(int i)
         {
@@ -240,13 +252,11 @@ namespace Kalkulator
         {
             historyView.Text = "Invalid operation";
             resultView.Text = msg;
-            calc = new Calculator();
-            currentResultNumber = new Number();
         }
 
         void Restart()
         {
-            calc = new Calculator();
+            calc.Restart();
             currentResultNumber = new Number();
         }
 
@@ -264,8 +274,7 @@ namespace Kalkulator
             {
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.SetTitle("Author");
-                alert.SetNeutralButton("OK", delegate {; });
-                alert.SetMessage("Piotr Zienkowicz\n2016");
+                alert.SetMessage("Created by Piotr Zienkowicz (2016)");
                 alert.Show();
                 clickNumber = 0;
             }

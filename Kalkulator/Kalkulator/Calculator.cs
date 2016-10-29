@@ -14,6 +14,7 @@ namespace Kalkulator
         public Calculator()
         {
             operationHistory = new List<Operation>();
+            IsRestarted = false;
         }
 
         /// <summary>
@@ -107,6 +108,12 @@ namespace Kalkulator
             return false;
         }
 
+
+        public bool IsEmpty()
+        {
+            return (operationHistory.Count == 0);
+        }
+
         /// <summary>
         /// Calculate answer
         /// </summary>
@@ -159,10 +166,14 @@ namespace Kalkulator
             return result;
         }
 
+        public double LastResult { get; set; }
+        public bool IsRestarted { get; set; }
 
-
-
-
-
+        internal void Restart()
+        {
+            LastResult = GetResult();
+            operationHistory = new List<Operation>();
+            IsRestarted = true;
+        }
     }
 }
