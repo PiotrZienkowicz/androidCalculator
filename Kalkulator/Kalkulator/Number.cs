@@ -16,7 +16,7 @@ namespace Kalkulator
     {
         string intPart;
         string floatPart;
-        lon number = 0;
+        double number = 0;
 
         bool isFloat;
         bool isNegative;
