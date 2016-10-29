@@ -14,27 +14,33 @@ namespace Kalkulator
 {
     class Calculator
     {
-        public string Restult { get; set; }
+        public string Result { get; set; }
         public string History { get; set; }
 
-        double currentNumber;
-        double lastNumber;
+        public double CurrentNumber { get; set; }
+        public double LastNumber { get; set; }
+
+        public Calculator()
+        {
+            LastNumber = 0;
+            CurrentNumber = 0;
+        }
 
         public void Add()
         {
-
+            Result = (LastNumber + CurrentNumber).ToString();
         }
         public void Sub()
         {
-
+            Result = (LastNumber + CurrentNumber).ToString();
         }
         public void Multi()
         {
-
+            Result = (LastNumber + CurrentNumber).ToString();
         }
         public void Div()
         {
-
+            Result = (LastNumber + CurrentNumber).ToString();
         }
         public void Percent()
         {

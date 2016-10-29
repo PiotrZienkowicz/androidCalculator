@@ -33,12 +33,12 @@ namespace Kalkulator
             {
                 if (intPart.Length != 0)
                 {
-                    number = Int32.Parse(intPart);
+                    number = Int64.Parse(intPart);
                 }
                 else
                     number = 0;
-                
-                if(isFloat && floatPart.Length != 0)
+
+                if (isFloat && floatPart.Length != 0)
                 {
                     double fPart = (Double.Parse(floatPart) / Math.Pow(10, floatPart.Length));
                     number += fPart;
@@ -49,7 +49,7 @@ namespace Kalkulator
 
         public void ChangeSign()
         {
-            number = -number;
+            number = -1 * number;
         }
 
         public void AddDigit(int digit)
@@ -64,8 +64,18 @@ namespace Kalkulator
 
         public void RemoveDigit()
         {
-            if (!isFloat) intPart.Remove(intPart.Length - 1);
-            else floatPart.Remove(floatPart.Length - 1);
+            if (!isFloat)
+            {
+                if (intPart.Length > 0)
+                    intPart = intPart.Substring(0, intPart.Length - 1);
+            }
+            else
+            {
+                if (floatPart.Length > 0)
+                    floatPart = floatPart.Substring(0, floatPart.Length - 1);
+
+                if (floatPart.Length == 0) isFloat = false;
+            }
         }
 
         public void SetPoint()
