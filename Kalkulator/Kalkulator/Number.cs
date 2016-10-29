@@ -2,6 +2,9 @@ using System;
 
 namespace Kalkulator
 {
+    /// <summary>
+    /// Class using to create a double number from calculator input buttons
+    /// </summary>
     class Number
     {
         string intPart;
