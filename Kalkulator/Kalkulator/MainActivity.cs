@@ -9,14 +9,18 @@ namespace Kalkulator
     {
 
         enum OPERATION { ADDITION, SUBSTRACTION, MULTIPLICATION, DIVISIOM, PERCENT };
+
+        TextView resultView;
+        TextView historyView;
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             RequestWindowFeature(Android.Views.WindowFeatures.NoTitle);
             SetContentView (Resource.Layout.Main);
 
-            TextView resultView = FindViewById<TextView>(Resource.Id.result);
-            TextView historyView = FindViewById<TextView>(Resource.Id.history);
+            resultView = FindViewById<TextView>(Resource.Id.result);
+            historyView = FindViewById<TextView>(Resource.Id.history);
 
             Button equalsButton = FindViewById<Button>(Resource.Id.equals);
             Button pointButton = FindViewById<Button>(Resource.Id.point);
@@ -48,14 +52,30 @@ namespace Kalkulator
 
             equalsButton.Click += delegate
             {
+                Number num = new Number();
+
+                num.AddDigit(0);
+                num.AddDigit(2);
+                num.AddDigit(3);
+                num.SetPoint();
+                num.AddDigit(0);
+
+                num.AddDigit(5);
+
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.SetMessage("oooo");
+                alert.SetMessage(num.GetNumber.ToString());
 
                 alert.Show();
+
+                this.Refresh();
             };
         }
 
-        
+        void Refresh()
+        {
+            historyView.Text = "2 + 3";
+            resultView.Text = "5";
+        }
     }
 }
 

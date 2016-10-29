@@ -23,7 +23,8 @@
             android:text="result"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="right"
-            android:textIsSelectable="false" />
+            android:textIsSelectable="false"
+            android:textSize="35dp" />
     <!-- 2 line -->
         <LinearLayout
             android:layout_width="match_parent"
