@@ -57,6 +57,7 @@
     <Compile Include="Operation.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />
