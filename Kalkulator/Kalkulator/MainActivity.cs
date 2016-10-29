@@ -13,16 +13,16 @@ namespace Kalkulator
         TextView resultView;
         TextView historyView;
         Calculator calc;
-        Number current;
+        Number currentResultNumber;
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             RequestWindowFeature(Android.Views.WindowFeatures.NoTitle);
-            SetContentView (Resource.Layout.Main);
+            SetContentView(Resource.Layout.Main);
 
             calc = new Calculator();
-            current = new Number();
+            currentResultNumber = new Number();
 
             FindViewById<TextView>(Resource.Id.buildInfo).Text = System.DateTime.Now.ToString();
 
@@ -32,21 +32,23 @@ namespace Kalkulator
             Button equalsButton = FindViewById<Button>(Resource.Id.equals);
             equalsButton.Click += delegate
             {
+                if (currentResultNumber.GetNumber != 0)
+                {
+                    calc.AddCalculation(currentResultNumber, Calculator.OPERATION_TYPE.EQUALS);
+                    currentResultNumber = calc.GetResult();
+                    this.Refresh();
+                    this.Restart();
+                }
+                else
+                    this.InvalidOperation("Dividing by 0");
 
-                //AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                //alert.SetMessage(num.GetNumber.ToString());
-
-                //alert.Show();
-                calc.AddCalculation(current, Calculator.OPERATION_TYPE.EQUALS);
-                current = calc.GetResult();
-                this.Refresh();
 
             };
 
             Button pointButton = FindViewById<Button>(Resource.Id.point);
             pointButton.Click += delegate
             {
-                current.SetPoint();
+                currentResultNumber.SetPoint();
                 this.Refresh();
 
             };
@@ -54,7 +56,7 @@ namespace Kalkulator
             Button signButton = FindViewById<Button>(Resource.Id.sign);
             signButton.Click += delegate
             {
-                current.ChangeSign();
+                currentResultNumber.ChangeSign();
                 this.Refresh();
 
             };
@@ -62,8 +64,8 @@ namespace Kalkulator
             Button additionButton = FindViewById<Button>(Resource.Id.addition);
             additionButton.Click += delegate
             {
-                calc.AddCalculation(current, Calculator.OPERATION_TYPE.ADDITION);
-                current = new Number();
+                calc.AddCalculation(currentResultNumber, Calculator.OPERATION_TYPE.ADDITION);
+                currentResultNumber = new Number();
                 this.Refresh();
 
             };
@@ -71,8 +73,8 @@ namespace Kalkulator
             Button substrictionButton = FindViewById<Button>(Resource.Id.substriction);
             substrictionButton.Click += delegate
             {
-                calc.AddCalculation(current, Calculator.OPERATION_TYPE.SUBSTRACTION);
-                current = new Number();
+                calc.AddCalculation(currentResultNumber, Calculator.OPERATION_TYPE.SUBSTRACTION);
+                currentResultNumber = new Number();
                 this.Refresh();
 
             };
@@ -80,17 +82,26 @@ namespace Kalkulator
             Button divisionButton = FindViewById<Button>(Resource.Id.division);
             divisionButton.Click += delegate
             {
-                calc.AddCalculation(current, Calculator.OPERATION_TYPE.DIVISION);
-                current = new Number();
-                this.Refresh();
+                if (currentResultNumber.GetNumber != 0)
+                {
+                    calc.AddCalculation(currentResultNumber, Calculator.OPERATION_TYPE.DIVISION);
+                    currentResultNumber = new Number();
+                    this.Refresh();
+                }
+                else
+                {
+                    this.InvalidOperation("Dividing by 0");
+                }
+
+
 
             };
 
             Button multiplicationButton = FindViewById<Button>(Resource.Id.multiplication);
             multiplicationButton.Click += delegate
             {
-                calc.AddCalculation(current, Calculator.OPERATION_TYPE.MULTIPLICATION);
-                current = new Number();
+                calc.AddCalculation(currentResultNumber, Calculator.OPERATION_TYPE.MULTIPLICATION);
+                currentResultNumber = new Number();
                 this.Refresh();
 
             };
@@ -98,7 +109,12 @@ namespace Kalkulator
             Button percentButton = FindViewById<Button>(Resource.Id.percent);
             percentButton.Click += delegate
             {
-                calc.AddCalculation(current, Calculator.OPERATION_TYPE.PERCENT);
+
+
+                Number result = calc.GetResult();
+                calc = new Calculator();
+
+                calc.AddCalculation(currentResultNumber, Calculator.OPERATION_TYPE.PERCENT);
 
                 this.Refresh();
 
@@ -107,7 +123,7 @@ namespace Kalkulator
             Button backspaceButton = FindViewById<Button>(Resource.Id.backspace);
             backspaceButton.Click += delegate
             {
-                current.RemoveDigit();
+                currentResultNumber.RemoveDigit();
                 this.Refresh();
 
             };
@@ -115,8 +131,7 @@ namespace Kalkulator
             Button clearButton = FindViewById<Button>(Resource.Id.clear);
             clearButton.Click += delegate
             {
-                current = new Number();
-                calc = new Calculator();
+                this.Restart();
                 this.Refresh();
 
             };
@@ -128,15 +143,15 @@ namespace Kalkulator
             Button zeroButton = FindViewById<Button>(Resource.Id.zero);
             zeroButton.Click += delegate
             {
-                current.AddDigit(0);
+                currentResultNumber.AddDigit(0);
                 this.Refresh();
 
             };
-                
+
             Button oneButton = FindViewById<Button>(Resource.Id.one);
             oneButton.Click += delegate
             {
-                current.AddDigit(1);
+                currentResultNumber.AddDigit(1);
                 this.Refresh();
 
             };
@@ -144,7 +159,7 @@ namespace Kalkulator
             Button twoButton = FindViewById<Button>(Resource.Id.two);
             twoButton.Click += delegate
             {
-                current.AddDigit(2);
+                currentResultNumber.AddDigit(2);
                 this.Refresh();
 
             };
@@ -152,7 +167,7 @@ namespace Kalkulator
             Button threeButton = FindViewById<Button>(Resource.Id.three);
             threeButton.Click += delegate
             {
-                current.AddDigit(3);
+                currentResultNumber.AddDigit(3);
                 this.Refresh();
 
             };
@@ -160,7 +175,7 @@ namespace Kalkulator
             Button fourButton = FindViewById<Button>(Resource.Id.four);
             fourButton.Click += delegate
             {
-                current.AddDigit(4);
+                currentResultNumber.AddDigit(4);
                 this.Refresh();
 
             };
@@ -168,7 +183,7 @@ namespace Kalkulator
             Button fiveButton = FindViewById<Button>(Resource.Id.five);
             fiveButton.Click += delegate
             {
-                current.AddDigit(5);
+                currentResultNumber.AddDigit(5);
                 this.Refresh();
 
             };
@@ -176,7 +191,7 @@ namespace Kalkulator
             Button sixButton = FindViewById<Button>(Resource.Id.six);
             sixButton.Click += delegate
             {
-                current.AddDigit(6);
+                currentResultNumber.AddDigit(6);
                 this.Refresh();
 
             };
@@ -184,7 +199,7 @@ namespace Kalkulator
             Button sevenButton = FindViewById<Button>(Resource.Id.seven);
             sevenButton.Click += delegate
             {
-                current.AddDigit(7);
+                currentResultNumber.AddDigit(7);
                 this.Refresh();
 
             };
@@ -192,7 +207,7 @@ namespace Kalkulator
             Button eigthButton = FindViewById<Button>(Resource.Id.eigth);
             eigthButton.Click += delegate
             {
-                current.AddDigit(8);
+                currentResultNumber.AddDigit(8);
                 this.Refresh();
 
             };
@@ -200,15 +215,29 @@ namespace Kalkulator
             Button nineButton = FindViewById<Button>(Resource.Id.nine);
             nineButton.Click += delegate
             {
-                current.AddDigit(9);
+                currentResultNumber.AddDigit(9);
                 this.Refresh();
             };
+        }
+
+        void InvalidOperation(string msg)
+        {
+            historyView.Text = "Invalid operation";
+            resultView.Text = msg;
+            calc = new Calculator();
+            currentResultNumber = new Number();
+        }
+
+        void Restart()
+        {
+            calc = new Calculator();
+            currentResultNumber = new Number();
         }
 
         void Refresh()
         {
             historyView.Text = calc.GetHistory();
-            resultView.Text = current.GetNumber.ToString();
+            resultView.Text = currentResultNumber.GetNumber.ToString();
         }
 
     }

@@ -46,6 +46,11 @@ namespace Kalkulator
                             operationSymbol += "/";
                             break;
                         }
+                    case OPERATION_TYPE.PERCENT:
+                        {
+                            operationSymbol += "%";
+                            break;
+                        }
                     case OPERATION_TYPE.EQUALS:
                         {
                             operationSymbol += "=";
@@ -69,8 +74,8 @@ namespace Kalkulator
                 for (int i = 1; i < operationHistory.Count; i++)
                 {
                     string operationSymbol = string.Empty;
-                    OPERATION_TYPE type = operationHistory[i - 1].type;
-                    switch (type)
+                    
+                    switch (operationHistory[i - 1].type)
                     {
                         case OPERATION_TYPE.ADDITION:
                             {
@@ -92,6 +97,11 @@ namespace Kalkulator
                                 result /= operationHistory[i].number.GetNumber;
                                 break;
                             }
+                        case OPERATION_TYPE.PERCENT:
+                            {
+                                result /= operationHistory[i].number.GetNumber;
+                                break;
+                            }
                         default:
                             {
                                 break;
@@ -100,7 +110,9 @@ namespace Kalkulator
 
                 }
             }
-            return new Number(result);
+            Number resultNumber = new Number(result);
+            if (result < 0) resultNumber.ChangeSign();
+            return resultNumber;
         }
 
 
