@@ -9,14 +9,11 @@ namespace Kalkulator
     public class MainActivity : Activity
     {
 
-        enum OPERATION { ADDITION, SUBSTRACTION, MULTIPLICATION, DIVISIOM, PERCENT };
 
         TextView resultView;
         TextView historyView;
         Calculator calc;
         Number current;
-
-        int c = 0;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -26,6 +23,8 @@ namespace Kalkulator
 
             calc = new Calculator();
             current = new Number();
+
+            FindViewById<TextView>(Resource.Id.buildInfo).Text = System.DateTime.Now.ToString();
 
             resultView = FindViewById<TextView>(Resource.Id.result);
             historyView = FindViewById<TextView>(Resource.Id.history);
@@ -38,9 +37,8 @@ namespace Kalkulator
                 //alert.SetMessage(num.GetNumber.ToString());
 
                 //alert.Show();
-
-
-
+                calc.AddCalculation(current, Calculator.OPERATION_TYPE.EQUALS);
+                current = calc.GetResult();
                 this.Refresh();
 
             };
@@ -64,7 +62,8 @@ namespace Kalkulator
             Button additionButton = FindViewById<Button>(Resource.Id.addition);
             additionButton.Click += delegate
             {
-                calc.Add();
+                calc.AddCalculation(current, Calculator.OPERATION_TYPE.ADDITION);
+                current = new Number();
                 this.Refresh();
 
             };
@@ -72,7 +71,8 @@ namespace Kalkulator
             Button substrictionButton = FindViewById<Button>(Resource.Id.substriction);
             substrictionButton.Click += delegate
             {
-                calc.Sub();
+                calc.AddCalculation(current, Calculator.OPERATION_TYPE.SUBSTRACTION);
+                current = new Number();
                 this.Refresh();
 
             };
@@ -80,7 +80,8 @@ namespace Kalkulator
             Button divisionButton = FindViewById<Button>(Resource.Id.division);
             divisionButton.Click += delegate
             {
-                calc.Div();
+                calc.AddCalculation(current, Calculator.OPERATION_TYPE.DIVISION);
+                current = new Number();
                 this.Refresh();
 
             };
@@ -88,7 +89,8 @@ namespace Kalkulator
             Button multiplicationButton = FindViewById<Button>(Resource.Id.multiplication);
             multiplicationButton.Click += delegate
             {
-                calc.Multi();
+                calc.AddCalculation(current, Calculator.OPERATION_TYPE.MULTIPLICATION);
+                current = new Number();
                 this.Refresh();
 
             };
@@ -96,7 +98,8 @@ namespace Kalkulator
             Button percentButton = FindViewById<Button>(Resource.Id.percent);
             percentButton.Click += delegate
             {
-                calc.Percent();
+                calc.AddCalculation(current, Calculator.OPERATION_TYPE.PERCENT);
+
                 this.Refresh();
 
             };
@@ -204,7 +207,7 @@ namespace Kalkulator
 
         void Refresh()
         {
-            historyView.Text = "2 + 3";
+            historyView.Text = calc.GetHistory();
             resultView.Text = current.GetNumber.ToString();
         }
 

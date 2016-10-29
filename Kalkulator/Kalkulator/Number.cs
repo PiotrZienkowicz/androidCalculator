@@ -1,14 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 
 namespace Kalkulator
 {
@@ -27,6 +17,21 @@ namespace Kalkulator
             floatPart = string.Empty;
             isFloat = false;
             isNegative = false;
+        }
+
+        public Number(double x)
+        {
+            isNegative = (x < 0);
+
+            Int64 intP = Convert.ToInt64(x);
+            isFloat = ((x - intP) > 0);
+
+            intPart = Convert.ToString(intP);
+            if(isFloat)
+            {
+                floatPart = Convert.ToString(x - intP);
+                floatPart = floatPart.Substring(2, floatPart.Length - 2);
+            }
         }
 
         public double GetNumber
@@ -70,6 +75,8 @@ namespace Kalkulator
             {
                 if (intPart.Length > 0)
                     intPart = intPart.Substring(0, intPart.Length - 1);
+
+                if (intPart.Length == 0) isNegative = false;
             }
             else
             {
