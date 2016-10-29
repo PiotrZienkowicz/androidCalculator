@@ -16,15 +16,17 @@ namespace Kalkulator
     {
         string intPart;
         string floatPart;
-        double number = 0;
+        lon number = 0;
 
         bool isFloat;
+        bool isNegative;
 
         public Number()
         {
             intPart = string.Empty;
             floatPart = string.Empty;
             isFloat = false;
+            isNegative = false;
         }
 
         public double GetNumber
@@ -43,13 +45,13 @@ namespace Kalkulator
                     double fPart = (Double.Parse(floatPart) / Math.Pow(10, floatPart.Length));
                     number += fPart;
                 }
-                return number;
+                return (!isNegative) ? number : -number;
             }
         }
 
         public void ChangeSign()
         {
-            number = -1 * number;
+            isNegative = !isNegative;
         }
 
         public void AddDigit(int digit)
