@@ -14,6 +14,7 @@ namespace Kalkulator
         TextView historyView;
         Calculator calc;
         Number currentResultNumber;
+        int clickNumber = 0;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -27,7 +28,20 @@ namespace Kalkulator
             FindViewById<TextView>(Resource.Id.buildInfo).Text = System.DateTime.Now.ToString();
 
             resultView = FindViewById<TextView>(Resource.Id.result);
+            resultView.Click += delegate
+            {
+                clickNumber++;
+                if (clickNumber == 2)
+                    this.ShowInfo();
+            };
+
             historyView = FindViewById<TextView>(Resource.Id.history);
+            historyView.Click += delegate
+            {
+                clickNumber++;
+                if (clickNumber == 2)
+                    this.ShowInfo();
+            };
 
             Button equalsButton = FindViewById<Button>(Resource.Id.equals);
             equalsButton.Click += delegate
@@ -240,6 +254,15 @@ namespace Kalkulator
             resultView.Text = currentResultNumber.GetNumber.ToString();
         }
 
+        void ShowInfo()
+        {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.SetTitle("Author");
+            alert.SetNeutralButton("OK", delegate {; });
+            alert.SetMessage("Piotr Zienkowicz\n2016");
+            alert.Show();
+            clickNumber = 0;
+        }
     }
 }
 
