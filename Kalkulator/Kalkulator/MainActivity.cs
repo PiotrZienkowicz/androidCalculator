@@ -14,7 +14,10 @@ namespace Kalkulator
 
         TextView resultView;
         TextView historyView;
+        TextView memoryInfoView;
+
         Calculator calc;
+        Calculator memory;
         Number currentResultNumber;
 
 
@@ -27,10 +30,11 @@ namespace Kalkulator
             SetContentView(Resource.Layout.Main);
 
             calc = new Calculator();
+            memory = new Calculator();
             currentResultNumber = new Number();
 
-            // compilation time info
-            FindViewById<TextView>(Resource.Id.buildInfo).Text = System.DateTime.Now.ToString();
+            // memory info
+            memoryInfoView = FindViewById<TextView>(Resource.Id.buildInfo);
 
             // Setup text information 
             resultView = FindViewById<TextView>(Resource.Id.result);
@@ -61,8 +65,22 @@ namespace Kalkulator
 
             // memory buttons
             Button memoryCleanButton = FindViewById<Button>(Resource.Id.memoryClean);
+            memoryCleanButton.Click += delegate
+            {
+                CleanMemory();
+            };
+
             Button memoryResetButton = FindViewById<Button>(Resource.Id.memoryReset);
+            memoryResetButton.Click += delegate
+            {
+                GetFromMemory();
+            };
+
             Button memoryAddButton = FindViewById<Button>(Resource.Id.memoryAdd);
+            memoryAddButton.Click += delegate
+            {
+                AddToMemory();
+            };
             #endregion
             #region Operation buttons
             // Operation buttons
@@ -282,6 +300,8 @@ namespace Kalkulator
         {
             historyView.Text = calc.GetHistory();
             resultView.Text = currentResultNumber.GetNumber.ToString();
+            if (!memory.IsEmpty()) memoryInfoView.Text = "M";
+            else memoryInfoView.Text = "";
         }
 
         int clickNumber = 0;
@@ -296,6 +316,28 @@ namespace Kalkulator
                 alert.Show();
                 clickNumber = 0;
             }
+        }
+
+        void AddToMemory()
+        {
+            memory.AddCalculation(currentResultNumber.GetNumber, OPERATION_TYPE.ADDITION);
+            currentResultNumber = new Number();
+            this.Refresh();
+        }
+
+        void GetFromMemory()
+        {
+            if(!memory.IsEmpty())
+            {
+                currentResultNumber = new Number(memory.GetResult());
+                this.Refresh();
+            }
+        }
+
+        void CleanMemory()
+        {
+            memory = new Calculator();
+            this.Refresh();
         }
     }
 }
