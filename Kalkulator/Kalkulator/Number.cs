@@ -32,13 +32,20 @@ namespace Kalkulator
             Int64 intP = Convert.ToInt64(x);
 
             isFloat = (Math.Abs(x - intP) > 0);
-            
+
             if (isFloat)
             {
                 int pointIndex = num.LastIndexOf('.');
-                intPart = num.Substring(0, pointIndex);
-                int offset = intPart.Length + 1;
-                floatPart = num.Substring(offset, num.Length - 1 - offset);
+                if (pointIndex >= 0)
+                {
+                    intPart = num.Substring(0, pointIndex);
+                    int offset = intPart.Length + 1;
+                    floatPart = num.Substring(offset, num.Length - 1 - offset);
+                }
+                else
+                {
+                    throw new OverflowException();
+                }
             }
             else
                 intPart = num;

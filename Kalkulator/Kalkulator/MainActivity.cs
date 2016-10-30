@@ -3,6 +3,7 @@ using Android.Widget;
 using Android.OS;
 using Android.Views;
 using static Kalkulator.Calculator;
+using System;
 
 namespace Kalkulator
 {
@@ -192,61 +193,77 @@ namespace Kalkulator
 
         void DoOperation(OPERATION_TYPE type)
         {
-            if(calc.IsEmpty())
+            try
             {
-                if(calc.IsRestarted && currentResultNumber.GetNumber == 0)
-                {
-                    currentResultNumber = new Number(calc.LastResult);
-                }
 
-                calc.AddCalculation(currentResultNumber.GetNumber, type);
-
-                if (type != OPERATION_TYPE.EQUALS)
+                if (calc.IsEmpty())
                 {
-                    currentResultNumber = new Number();
-                    this.Refresh();
+                    if (calc.IsRestarted && currentResultNumber.GetNumber == 0)
+                    {
+                        currentResultNumber = new Number(calc.LastResult);
+                    }
+
+                    calc.AddCalculation(currentResultNumber.GetNumber, type);
+
+                    if (type != OPERATION_TYPE.EQUALS)
+                    {
+                        currentResultNumber = new Number();
+                        this.Refresh();
+                    }
+                    else
+                    {
+                        currentResultNumber = new Number(calc.GetResult());
+                        this.Refresh();
+                        this.Restart();
+                    }
                 }
                 else
                 {
-                    currentResultNumber = new Number(calc.GetResult());
-                    this.Refresh();
-                    this.Restart();
-                }
-            }
-            else
-            {
-                bool canCalculate = true;
-                //if ((type == OPERATION_TYPE.EQUALS) && calc.CheckLastOperation(OPERATION_TYPE.DIVISION))
-                if ( calc.CheckLastOperation(OPERATION_TYPE.DIVISION))
+                    bool canCalculate = true;
+                    //if ((type == OPERATION_TYPE.EQUALS) && calc.CheckLastOperation(OPERATION_TYPE.DIVISION))
+                    if (calc.CheckLastOperation(OPERATION_TYPE.DIVISION))
 
-                {
-                    if (currentResultNumber.GetNumber == 0)
                     {
-                        InvalidOperation("Dividing by 0");
-                        canCalculate = false;
+                        if (currentResultNumber.GetNumber == 0)
+                        {
+                            InvalidOperation("Dividing by 0");
+                            canCalculate = false;
+                        }
+                    }
+
+                    if (canCalculate)
+                    {
+                        calc.AddCalculation(currentResultNumber.GetNumber, type);
+                        currentResultNumber = new Number();
+                        this.Refresh();
+                    }
+
+                    if ((type == OPERATION_TYPE.EQUALS) && canCalculate)
+                    {
+                        currentResultNumber = new Number(calc.GetResult());
+                        this.Refresh();
+                        this.Restart();
                     }
                 }
-
-                if (canCalculate)
-                {
-                    calc.AddCalculation(currentResultNumber.GetNumber, type);
-                    currentResultNumber = new Number();
-                    this.Refresh();
-                }
-
-                if ((type == OPERATION_TYPE.EQUALS) && canCalculate)
-                {
-                    currentResultNumber = new Number(calc.GetResult());
-                    this.Refresh();
-                    this.Restart();
-                }
+            }
+            catch(OverflowException e)
+            {
+                InvalidOperation("Too big numbers");
             }
         }
 
         void AddDigit(int i)
         {
-            currentResultNumber.AddDigit(i);
-            this.Refresh();
+            try
+            {
+                currentResultNumber.AddDigit(i);
+                this.Refresh();
+            }
+            catch(OverflowException e)
+            {
+                InvalidOperation("Too big numbers");
+            }
+            
         }
 
         void InvalidOperation(string msg)
